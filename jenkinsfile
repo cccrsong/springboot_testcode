@@ -1,7 +1,7 @@
 pipeline {
-                agent any
-                stages {
-                    stage('Git Progress') {
+    agent any
+    stages {
+        stage('Git Progress') {
             steps {
                 git  branch: 'main', credentialsId: 'github_cred', url: 'https://github.com/sehun013/springboot_testcode.git'
             }
@@ -78,5 +78,5 @@ pipeline {
                 }
             }
         }
-                }
-            }
+    }
+}
