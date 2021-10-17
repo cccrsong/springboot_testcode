@@ -1,0 +1,67 @@
+pipeline {
+                agent any
+                stages {
+                    stage('Git Progress') {
+            steps {
+                git  branch: 'main', credentialsId: 'github_cred', url: 'https://github.com/cccrsong/springboot_testcode.git'
+            }
+        }
+	stage('Gradle Junit Test') {
+            steps {
+                sh 'chmod +x ./gradlew'
+                sh "chmod +x gradlew; ./gradlew test"
+            }
+        }
+        stage('Gradle Build ') {
+            steps {
+                sh 'chmod +x ./gradlew'
+                sh './gradlew clean build'
+            }
+        }
+        stage('Publish Test Result') {
+            steps {
+                junit '**/build/test-results/test/*.xml'
+            }
+        }
+	stage('SonarQube analysis') {
+            steps {
+                script {
+                    withSonarQubeEnv() {
+                        sh "./gradlew sonarqube"
+                    }
+                }
+            }
+       }
+	
+        stage('OWASP Dependency-Check') {
+            steps {
+                dependencyCheck additionalArguments: '-s "./" -f "XML" -o "./" --prettyPrint', odcInstallation: 'dependency'
+                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
+                dependencyCheck additionalArguments: '-s "./" -f "HTML" -o "./" --prettyPrint', odcInstallation: 'dependency'
+            }
+        }
+        
+	stage('Push image') {
+            steps {
+                script {
+                    checkout scm
+                    docker.withRegistry('https://registry.hub.docker.com', 'dockerhub_cred') {
+                        def customImage = docker.build("shoutsc/test")
+                        customImage.push("latest")
+                    }
+                }
+            }
+        }
+	
+        stage ('Anchore test') {
+            steps {
+                script {
+                    def imageLine = 'shoutsc/test'
+                    writeFile file: 'shoutsc/test', text: imageLine
+                    anchore name: 'shoutsc/test', engineCredentialsId: 'anchore_cred', bailOnFail: false
+                }
+            }
+        }
+        
+                }
+            }
