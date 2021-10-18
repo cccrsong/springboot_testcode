@@ -23,21 +23,15 @@ pipeline {
                 junit '**/build/test-results/test/*.xml'
             }
         }
-	stage('SonarQube analysis') {
+
+        stage('Snyk Test') {
             steps {
-                script {
-                    withSonarQubeEnv() {
-                        sh "./gradlew sonarqube"
-                    }
-                }
-            }
-       }
-	
-        stage('OWASP Dependency-Check') {
-            steps {
-                dependencyCheck additionalArguments: '-s "./" -f "XML" -o "./" --prettyPrint', odcInstallation: 'dependency'
-                dependencyCheckPublisher pattern: 'dependency-check-report.xml'
-                dependencyCheck additionalArguments: '-s "./" -f "HTML" -o "./" --prettyPrint', odcInstallation: 'dependency'
+                echo 'Testing...'
+                snykSecurity (
+                    snykInstallation: 'Snyk',
+                    snykTokenId: 'snyk-token',
+                    severity: 'high'
+                )
             }
         }
         
