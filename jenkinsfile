@@ -1,12 +1,12 @@
 pipeline {
-                agent any
-                stages {
-                    stage('Git Progress') {
+    agent any
+    stages {
+        stage('Git Progress') {
             steps {
                 git  branch: 'main', credentialsId: 'github_cred', url: 'https://github.com/cccrsong/springboot_testcode.git'
             }
         }
-	stage('Gradle Junit Test') {
+	    stage('Gradle Junit Test') {
             steps {
                 sh 'chmod +x ./gradlew'
                 sh "chmod +x gradlew; ./gradlew test"
@@ -46,3 +46,5 @@ pipeline {
                 }
             }
         }
+    }
+}
