@@ -27,9 +27,9 @@ pipeline {
         stage('Snyk Test') {
             steps {
                 snykSecurity(
-                    failOnIssues: false,
                     snykInstallation: 'Snyk',
-                    snykTokenId: 'Snyk'
+                    snykTokenId: 'Snyk',
+		    severity: 'high'
                 )
             }
         }
