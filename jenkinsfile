@@ -46,15 +46,3 @@ pipeline {
                 }
             }
         }
-	
-        stage ('Anchore test') {
-            steps {
-                script {
-                    def imageLine = 'shoutsc/test'
-                    writeFile file: 'shoutsc/test', text: imageLine
-                    anchore name: 'shoutsc/test', engineCredentialsId: 'anchore_cred', bailOnFail: false
-                }
-            }
-        }
-    }
-}
