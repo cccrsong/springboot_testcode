@@ -24,13 +24,12 @@ pipeline {
             }
         }
 
-        stage('Snyk Test') {
+stage('Snyk Test') {
             steps {
-                echo 'Testing...'
-                snykSecurity (
+                snykSecurity(
+                    failOnIssues: false,
                     snykInstallation: 'Snyk',
-                    snykTokenId: 'Snyk',
-                    severity: 'high'
+                    snykTokenId: 'Snyk'
                 )
             }
         }
