@@ -29,7 +29,7 @@ pipeline {
                 echo 'Testing...'
                 snykSecurity (
                     snykInstallation: 'Snyk',
-                    snykTokenId: 'snyk-token',
+                    snykTokenId: 'Snyk',
                     severity: 'high'
                 )
             }
@@ -56,6 +56,5 @@ pipeline {
                 }
             }
         }
-        
-                }
-            }
+    }
+}
