@@ -24,7 +24,7 @@ pipeline {
             }
         }
 
-stage('Snyk Test') {
+        stage('Snyk Test') {
             steps {
                 snykSecurity(
                     failOnIssues: false,
